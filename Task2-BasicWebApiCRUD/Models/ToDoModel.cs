@@ -16,6 +16,6 @@ namespace Task2_BasicWebApiCRUD.Models
         public bool IsCompleted { get; set; }
         [Required]
         public DateTime CreatedDate { get; set; } = DateTime.Now;
-        public DateTime UpdatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
     }
 }
