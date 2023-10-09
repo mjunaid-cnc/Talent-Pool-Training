@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34003.232
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InitialSetup", "InitialSetup\InitialSetup.csproj", "{F2ADCD63-5419-416B-96AA-E31094BA3265}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InitialSetup", "InitialSetup\InitialSetup.csproj", "{F2ADCD63-5419-416B-96AA-E31094BA3265}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task2-BasicWebApiCRUD", "Task2-BasicWebApiCRUD\Task2-BasicWebApiCRUD.csproj", "{1502052C-5F55-4E27-AC92-0517AE5D45C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{F2ADCD63-5419-416B-96AA-E31094BA3265}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2ADCD63-5419-416B-96AA-E31094BA3265}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2ADCD63-5419-416B-96AA-E31094BA3265}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1502052C-5F55-4E27-AC92-0517AE5D45C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1502052C-5F55-4E27-AC92-0517AE5D45C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1502052C-5F55-4E27-AC92-0517AE5D45C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1502052C-5F55-4E27-AC92-0517AE5D45C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
