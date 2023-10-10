@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Task2_BasicWebApiCRUD.Models;
+using Todo.Application.Interfaces;
+using Todo.Domain.Models;
 
 namespace Task2_BasicWebApiCRUD.Controllers
 {
@@ -8,11 +9,10 @@ namespace Task2_BasicWebApiCRUD.Controllers
     [Route("api/[controller]")]
     public class ToDoController : ControllerBase
     {
-        AppDbContext _context;
-
-        public ToDoController(AppDbContext context)
+        private readonly ITodoService _todoService;
+        public ToDoController(ITodoService todoService)
         {
-            _context = context;
+            _todoService = todoService;
         }
 
         [HttpPost]
@@ -20,13 +20,8 @@ namespace Task2_BasicWebApiCRUD.Controllers
         {
             try
             {
-                var todoItem = new ToDoModel
-                {
-                    Title = model.Title,
-                };
-                _context.ToDos.Add(todoItem);
-                await _context.SaveChangesAsync();
-                return Ok(todoItem);
+                var addedItem = await _todoService.AddItem(model);
+                return Ok(addedItem);
             }
             catch (Exception ex)
             {
@@ -39,7 +34,7 @@ namespace Task2_BasicWebApiCRUD.Controllers
         {
             try
             {
-                var items = await _context.ToDos.OrderByDescending(x => x.UpdatedDate).ToListAsync();
+                var items = await _todoService.GetAllItems();
                 return Ok(items);
             }
             catch (Exception ex)
@@ -53,7 +48,7 @@ namespace Task2_BasicWebApiCRUD.Controllers
         {
             try
             {
-                var item = await _context.ToDos.FirstOrDefaultAsync(x => x.Id == id);
+                var item = await _todoService.GetItemById(id);
                 if (item == null) return NotFound("Item not found");
                 return Ok(item);
             }
@@ -69,13 +64,9 @@ namespace Task2_BasicWebApiCRUD.Controllers
         {
             try
             {
-                var itemToUpdate = await _context.ToDos.FirstOrDefaultAsync(x => x.Id == id);
-                if (itemToUpdate == null) return NotFound("Item not found");
-                itemToUpdate.Title = model.Title;
-                itemToUpdate.IsCompleted = model.IsCompleted;
-                itemToUpdate.UpdatedDate = DateTime.Now;
-                await _context.SaveChangesAsync();
-                return Ok(itemToUpdate);
+                var updatedItem = await _todoService.UpdateItem(id, model);
+                if (updatedItem == null) return NotFound("Item not found");
+                return Ok(updatedItem);
             }
             catch (Exception ex)
             {
@@ -88,13 +79,10 @@ namespace Task2_BasicWebApiCRUD.Controllers
         {
             try
             {
-                var item = _context.ToDos.FirstOrDefault(x => x.Id == id);
-                if (item == null) return NotFound("Item not found");
-                _context.ToDos.Remove(item);
-                await _context.SaveChangesAsync();
-                return Ok("Item removed");
+                var deleteResult = await _todoService.DeleteItem(id);
+                return deleteResult ? Ok("Item removed") : NotFound("Item not found");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Problem(ex.Message);
             }

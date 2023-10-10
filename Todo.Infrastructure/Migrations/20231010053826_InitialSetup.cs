@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Task2_BasicWebApiCRUD.Migrations
+namespace Todo.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class InitialSetup : Migration
@@ -19,7 +19,7 @@ namespace Task2_BasicWebApiCRUD.Migrations
                     Title = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     IsCompleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {

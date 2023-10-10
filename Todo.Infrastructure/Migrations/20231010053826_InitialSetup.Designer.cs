@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Task2_BasicWebApiCRUD;
+using Todo.Infrastructure;
 
 #nullable disable
 
-namespace Task2_BasicWebApiCRUD.Migrations
+namespace Todo.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231009065700_ToDos_UpdatedDate_Nullable")]
-    partial class ToDos_UpdatedDate_Nullable
+    [Migration("20231010053826_InitialSetup")]
+    partial class InitialSetup
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace Task2_BasicWebApiCRUD.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Task2_BasicWebApiCRUD.Models.ToDoModel", b =>
+            modelBuilder.Entity("Todo.Domain.Models.ToDoModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

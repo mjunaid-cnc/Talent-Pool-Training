@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Task2_BasicWebApiCRUD;
+using Todo.Infrastructure;
 
 #nullable disable
 
-namespace Task2_BasicWebApiCRUD.Migrations
+namespace Todo.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
@@ -22,7 +22,7 @@ namespace Task2_BasicWebApiCRUD.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Task2_BasicWebApiCRUD.Models.ToDoModel", b =>
+            modelBuilder.Entity("Todo.Domain.Models.ToDoModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Task2_BasicWebApiCRUD.Models
+namespace Todo.Domain.Models
 {
     public class ToDoModel
     {

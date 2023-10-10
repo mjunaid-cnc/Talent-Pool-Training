@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Task2_BasicWebApiCRUD.Models;
+using Todo.Domain.Models;
 
-namespace Task2_BasicWebApiCRUD
+namespace Todo.Infrastructure
 {
     public class AppDbContext : DbContext
     {
