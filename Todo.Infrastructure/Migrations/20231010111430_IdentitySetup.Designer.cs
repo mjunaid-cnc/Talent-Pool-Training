@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Todo.Infrastructure;
 
@@ -11,9 +12,11 @@ using Todo.Infrastructure;
 namespace Todo.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231010111430_IdentitySetup")]
+    partial class IdentitySetup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,22 +50,6 @@ namespace Todo.Infrastructure.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "e5ffde10-cef5-4a90-8976-9f393a42f523",
-                            ConcurrencyStamp = "265000df-fc73-4f4b-a108-5c1aefa70afa",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "b09f9f6d-966a-45f8-8f15-5214134e4a47",
-                            ConcurrencyStamp = "7317a842-df4a-4f98-a15c-3f95a604dfd1",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -258,7 +245,7 @@ namespace Todo.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ToDos", (string)null);
+                    b.ToTable("ToDos");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
