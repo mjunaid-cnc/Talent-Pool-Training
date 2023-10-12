@@ -74,6 +74,7 @@ namespace Todo.Infrastructure.Services
                 {
                     Subject = new System.Security.Claims.ClaimsIdentity(new Claim[]
                     {
+                        new Claim("id", user.Id.ToString()),
                         new Claim(ClaimTypes.Name, user.UserName),
                         new Claim(ClaimTypes.Role, string.Join(",", roles))
                     }),

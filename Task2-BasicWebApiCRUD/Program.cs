@@ -39,8 +39,9 @@ builder.Services.AddAuthentication(config =>
         };
     });
 
-//builder.Services.AddScoped<ITodoService, TodoService>();
+builder.Services.AddScoped<ITodoService, TodoService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<IUserResolverService, UserResolverService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

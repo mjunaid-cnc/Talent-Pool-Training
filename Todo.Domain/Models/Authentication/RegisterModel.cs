@@ -9,7 +9,9 @@ namespace Todo.Domain.Models.Authentication
 {
     public class RegisterModel
     {
+        [MinLength(1, ErrorMessage = "Password should at least 1 character long")]
         public string Username { get; set; } = null!;
+        [MinLength(6, ErrorMessage = "Password should at least 6 characters long")]
         public string Password { get; set; } = null!;
         public string Role { get; set; } = null!;
     }
