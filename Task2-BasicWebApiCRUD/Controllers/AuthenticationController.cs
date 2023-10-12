@@ -35,17 +35,18 @@ namespace Task2_BasicWebApiCRUD.Controllers
             }
         }
 
-        //[HttpPost("login")]
-        //public async Task<IActionResult> Login(LoginModel model)
-        //{
-        //    try
-        //    {
-        //        var response = 
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Ok(new Response { Message = ex.Message, StatusCode = StatusCodes.Status500InternalServerError });
-        //    }
-        //}
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginModel model)
+        {
+            try
+            {
+                var token = await _authenticationService.Authenticate(model);
+                return Ok(new Response { Content = token, StatusCode = StatusCodes.Status200OK });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new Response { Message = ex.Message, StatusCode = StatusCodes.Status500InternalServerError });
+            }
+        }
     }
 }

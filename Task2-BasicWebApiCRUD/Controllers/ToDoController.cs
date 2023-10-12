@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Todo.Application.Interfaces;
 using Todo.Domain.Models;
 
 namespace Task2_BasicWebApiCRUD.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ToDoController : ControllerBase
@@ -29,6 +31,7 @@ namespace Task2_BasicWebApiCRUD.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetAllItems()
         {
@@ -57,6 +60,7 @@ namespace Task2_BasicWebApiCRUD.Controllers
                 return Problem(ex.Message);
             }
         }
+
 
         [HttpPut]
         [Route("{id}")]

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -13,12 +14,12 @@ namespace Todo.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.InsertData(
-                table: "AspNetRoles",
+                table: "Roles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "b09f9f6d-966a-45f8-8f15-5214134e4a47", "7317a842-df4a-4f98-a15c-3f95a604dfd1", "User", "USER" },
-                    { "e5ffde10-cef5-4a90-8976-9f393a42f523", "265000df-fc73-4f4b-a108-5c1aefa70afa", "Admin", "ADMIN" }
+                    { new Guid("3f1aea69-0556-46c7-bd21-4a56e395fadb"), "b8e674d7-291d-4af5-8991-49d56f35a49e", "Admin", "ADMIN" },
+                    { new Guid("ec92f867-82c1-4aaa-89f3-a34f30f36a29"), "f2323c60-50e0-4afa-80e2-0c81eb6fcaed", "User", "USER" }
                 });
         }
 
@@ -26,14 +27,14 @@ namespace Todo.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DeleteData(
-                table: "AspNetRoles",
+                table: "Roles",
                 keyColumn: "Id",
-                keyValue: "b09f9f6d-966a-45f8-8f15-5214134e4a47");
+                keyValue: new Guid("3f1aea69-0556-46c7-bd21-4a56e395fadb"));
 
             migrationBuilder.DeleteData(
-                table: "AspNetRoles",
+                table: "Roles",
                 keyColumn: "Id",
-                keyValue: "e5ffde10-cef5-4a90-8976-9f393a42f523");
+                keyValue: new Guid("ec92f867-82c1-4aaa-89f3-a34f30f36a29"));
         }
     }
 }
