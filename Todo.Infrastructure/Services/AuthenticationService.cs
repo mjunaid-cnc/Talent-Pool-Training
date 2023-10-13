@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Todo.Application.Interfaces;
 using Todo.Domain.Entities;
+using Todo.Domain.Helpers;
 using Todo.Domain.Models.Authentication;
 
 namespace Todo.Infrastructure.Services
@@ -39,6 +40,10 @@ namespace Todo.Infrastructure.Services
                 };
                 if (await _roleManager.RoleExistsAsync(model.Role))
                 {
+                    if (string.Equals(model.Role, UserRoleType.Admin.ToString()))
+                    {
+                        return IdentityResult.Failed(new IdentityError { Description = "Invalid request" });
+                    }
                     var result = await _userManager.CreateAsync(user, model.Password);
                     if (!result.Succeeded)
                     {

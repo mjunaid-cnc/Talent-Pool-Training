@@ -6,6 +6,7 @@ using System.Text;
 using Todo.Application.Interfaces;
 using Todo.Domain.Entities;
 using Todo.Infrastructure;
+using Todo.Infrastructure.Seed;
 using Todo.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -62,5 +63,18 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    try
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        AdminSeeder.SeedAdmin(dbContext);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex);
+    }
+}
 
 app.Run();
