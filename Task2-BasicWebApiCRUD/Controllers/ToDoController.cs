@@ -21,11 +21,11 @@ namespace Task2_BasicWebApiCRUD.Controllers
             try
             {
                 var addedItem = await _todoService.AddItem(model);
-                return Ok(addedItem);
+                return Ok(new Response { Content = addedItem, StatusCode = StatusCodes.Status200OK });
             }
             catch (Exception ex)
             {
-                return Problem(ex.Message);
+                return Ok(new Response { Message = "An error occurred. " + ex.Message, StatusCode = StatusCodes.Status500InternalServerError });
             }
         }
 
@@ -35,11 +35,11 @@ namespace Task2_BasicWebApiCRUD.Controllers
             try
             {
                 var items = await _todoService.GetAllItems();
-                return Ok(items);
+                return Ok(new Response { Content = items, StatusCode = StatusCodes.Status200OK });
             }
             catch (Exception ex)
             {
-                return Problem(ex.Message);
+                return Ok(new Response { Message = "An error occurred. " + ex.Message, StatusCode = StatusCodes.Status500InternalServerError });
             }
         }
 
@@ -49,12 +49,13 @@ namespace Task2_BasicWebApiCRUD.Controllers
             try
             {
                 var item = await _todoService.GetItemById(id);
-                if (item == null) return NotFound("Item not found");
-                return Ok(item);
+                if (item == null)
+                    return Ok(new Response { Message = "Item not found", StatusCode = StatusCodes.Status400BadRequest });
+                return Ok(new Response { Content = item, StatusCode = StatusCodes.Status200OK });
             }
             catch (Exception ex)
             {
-                return Problem(ex.Message);
+                return Ok(new Response { Message = "An error occurred. " + ex.Message, StatusCode = StatusCodes.Status500InternalServerError });
             }
         }
 
@@ -65,12 +66,13 @@ namespace Task2_BasicWebApiCRUD.Controllers
             try
             {
                 var updatedItem = await _todoService.UpdateItem(id, model);
-                if (updatedItem == null) return NotFound("Item not found");
-                return Ok(updatedItem);
+                if (updatedItem == null)
+                    return Ok(new Response { Message = "Item not found", StatusCode = StatusCodes.Status400BadRequest });
+                return Ok(new Response { Content = updatedItem, StatusCode = StatusCodes.Status200OK });
             }
             catch (Exception ex)
             {
-                return Problem(ex.Message);
+                return Ok(new Response { Message = "An error occurred. " + ex.Message, StatusCode = StatusCodes.Status500InternalServerError });
             }
         }
 
@@ -80,11 +82,12 @@ namespace Task2_BasicWebApiCRUD.Controllers
             try
             {
                 var deleteResult = await _todoService.DeleteItem(id);
-                return deleteResult ? Ok("Item removed") : NotFound("Item not found");
+                return deleteResult ? Ok(new Response { Message = "Item removed", StatusCode = StatusCodes.Status200OK }) : Ok(new Response { Message = "Item not found", StatusCode = StatusCodes.Status400BadRequest });
+
             }
             catch (Exception ex)
             {
-                return Problem(ex.Message);
+                return Ok(new Response { Message = "An error occurred. " + ex.Message, StatusCode = StatusCodes.Status500InternalServerError });
             }
         }
     }
