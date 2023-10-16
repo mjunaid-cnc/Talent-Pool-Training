@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Task2_BasicWebApiCRUD.Middleware;
 using Todo.Application.Interfaces;
 using Todo.Domain.Entities;
 using Todo.Infrastructure;
@@ -62,19 +63,21 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseMiddleware<CheckUserAccessMiddleware>();
+
 app.MapControllers();
 
-using (var scope = app.Services.CreateScope())
-{
-    try
-    {
-        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        AdminSeeder.SeedAdmin(dbContext);
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine(ex);
-    }
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    try
+//    {
+//        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+//        AdminSeeder.SeedAdmin(dbContext);
+//    }
+//    catch (Exception ex)
+//    {
+//        Console.WriteLine(ex);
+//    }
+//}
 
 app.Run();
