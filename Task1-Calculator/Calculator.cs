@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Task1_Calculator
 {
-    public class Calculator
+    public abstract class Calculator
     {
         public decimal n1, n2;
 
