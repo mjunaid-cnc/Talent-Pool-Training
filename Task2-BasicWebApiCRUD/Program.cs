@@ -64,20 +64,24 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<CheckUserAccessMiddleware>();
+//app.UseWhen(context => context.Request.Path.Equals("/api/ToDo/A983B908-EE72-4EC2-7037-08DBCE0FD60F"), appBuilder =>
+//{
+//    appBuilder.UseMiddleware<CheckUserAccessMiddleware>();
+//});
 
 app.MapControllers();
 
-//using (var scope = app.Services.CreateScope())
-//{
-//    try
-//    {
-//        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-//        AdminSeeder.SeedAdmin(dbContext);
-//    }
-//    catch (Exception ex)
-//    {
-//        Console.WriteLine(ex);
-//    }
-//}
+using (var scope = app.Services.CreateScope())
+{
+    try
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        AdminSeeder.SeedAdmin(dbContext);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex);
+    }
+}
 
 app.Run();

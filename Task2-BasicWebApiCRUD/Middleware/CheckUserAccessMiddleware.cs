@@ -26,8 +26,8 @@ namespace Task2_BasicWebApiCRUD.Middleware
                 var itemId = queryArray[queryArray.Length - 1];
                 if (!dbContext.TodoLists.Any(x => x.Id == Guid.Parse(itemId) && x.UserId == userId))
                 {
-                    context.Response.StatusCode = (int)System.Net.HttpStatusCode.Unauthorized;
-                    await context.Response.WriteAsJsonAsync(new Response { Message = "Unauthorized request" });
+                   // context.Response.StatusCode = (int)System.Net.HttpStatusCode.Unauthorized;
+                    await context.Response.WriteAsJsonAsync(new Response { Message = "Unauthorized request", StatusCode = (int)System.Net.HttpStatusCode.Unauthorized });
                     return;
                 }
             }
