@@ -16,8 +16,8 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\NET-MVC-and-Razor-Pages\NET-MVC-and-Razor-Pages.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\NET-MVC-and-Razor-Pages\NET-MVC-and-Razor-Pages.csproj" />
+	</ItemGroup>
 
 </Project>

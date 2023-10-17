@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InitialSetup", "InitialSetu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NET-MVC-and-Razor-Pages", "NET-MVC-and-Razor-Pages\NET-MVC-and-Razor-Pages.csproj", "{96AFCCE3-421A-47D5-9DCE-7601AB8E7F56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task4.Infrastructure", "Task4.Infrastructure\Task4.Infrastructure.csproj", "{FEE8535F-B8EB-4070-A348-5F2463931450}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{96AFCCE3-421A-47D5-9DCE-7601AB8E7F56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96AFCCE3-421A-47D5-9DCE-7601AB8E7F56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96AFCCE3-421A-47D5-9DCE-7601AB8E7F56}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FEE8535F-B8EB-4070-A348-5F2463931450}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FEE8535F-B8EB-4070-A348-5F2463931450}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FEE8535F-B8EB-4070-A348-5F2463931450}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FEE8535F-B8EB-4070-A348-5F2463931450}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

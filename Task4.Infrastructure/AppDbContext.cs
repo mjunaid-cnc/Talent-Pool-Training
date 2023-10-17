@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using NET_MVC_and_Razor_Pages.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
