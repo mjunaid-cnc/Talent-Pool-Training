@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Task2_BasicWebApiCRUD.CustomAttributes;
 using Task2_BasicWebApiCRUD.Middleware;
 using Todo.Application.Interfaces;
 using Todo.Domain.Entities;
@@ -24,6 +25,15 @@ namespace Task2_BasicWebApiCRUD.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return Ok(new Response
+                    {
+                        Message = "Validation failed",
+                        Content = ModelState.Values.Select(x => x.Errors),
+                        StatusCode = StatusCodes.Status400BadRequest
+                    });
+                }
                 var addedItem = await _todoService.AddItem(model);
                 return Ok(new Response { Content = addedItem, StatusCode = StatusCodes.Status200OK });
             }
@@ -47,7 +57,7 @@ namespace Task2_BasicWebApiCRUD.Controllers
             }
         }
 
-        [MiddlewareFilter(typeof(CheckUserAccessMiddleware))]
+        [CheckUserAccess]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetItemById(Guid id)
         {
@@ -64,7 +74,7 @@ namespace Task2_BasicWebApiCRUD.Controllers
         }
 
 
-        [MiddlewareFilter(typeof(CheckUserAccessMiddleware))]
+        [CheckUserAccess]
         [HttpPut]
         [Route("{id}")]
         public async Task<IActionResult> UpdateItem([FromRoute] Guid id, [FromBody] ToDoModel model)
@@ -81,7 +91,7 @@ namespace Task2_BasicWebApiCRUD.Controllers
             }
         }
 
-        [MiddlewareFilter(typeof(CheckUserAccessMiddleware))]
+        [CheckUserAccess]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteItem(Guid id)
         {
