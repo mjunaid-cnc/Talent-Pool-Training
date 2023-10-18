@@ -4,8 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Task2_BasicWebApiCRUD.ActionFilters;
-using Task2_BasicWebApiCRUD.CustomAttributes;
-using Task2_BasicWebApiCRUD.Middleware;
 using Todo.Application.Interfaces;
 using Todo.Domain.Entities;
 using Todo.Infrastructure;
