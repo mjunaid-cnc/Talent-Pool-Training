@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Task2_BasicWebApiCRUD.CustomAttributes;
-using Task2_BasicWebApiCRUD.Middleware;
+using Task2_BasicWebApiCRUD.ActionFilters;
 using Todo.Application.Interfaces;
 using Todo.Domain.Entities;
 using Todo.Domain.Models;
@@ -57,7 +56,7 @@ namespace Task2_BasicWebApiCRUD.Controllers
             }
         }
 
-        [CheckUserAccess]
+        [ServiceFilter(typeof(CheckUserAccessActionFilter))]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetItemById(Guid id)
         {
@@ -74,7 +73,7 @@ namespace Task2_BasicWebApiCRUD.Controllers
         }
 
 
-        [CheckUserAccess]
+        [ServiceFilter(typeof(CheckUserAccessActionFilter))]
         [HttpPut]
         [Route("{id}")]
         public async Task<IActionResult> UpdateItem([FromRoute] Guid id, [FromBody] ToDoModel model)
@@ -91,7 +90,7 @@ namespace Task2_BasicWebApiCRUD.Controllers
             }
         }
 
-        [CheckUserAccess]
+        [ServiceFilter(typeof(CheckUserAccessActionFilter))]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteItem(Guid id)
         {

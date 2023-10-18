@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Task2_BasicWebApiCRUD.ActionFilters;
 using Task2_BasicWebApiCRUD.CustomAttributes;
 using Task2_BasicWebApiCRUD.Middleware;
 using Todo.Application.Interfaces;
@@ -23,7 +24,6 @@ builder.Services.AddIdentity<User, Role>()
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
 // Register JWT Authentication
 var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
 builder.Services.AddAuthentication(config =>
@@ -42,14 +42,11 @@ builder.Services.AddAuthentication(config =>
         };
     });
 
-builder.Services.AddScoped<CheckUserAccessFilter>();
+builder.Services.AddScoped<CheckUserAccessActionFilter>();
 builder.Services.AddScoped<ITodoService, TodoService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IUserResolverService, UserResolverService>();
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<CheckUserAccessFilter>();
-});
+builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
