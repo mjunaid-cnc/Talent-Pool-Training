@@ -1,8 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@using NET_MVC_Razor.Models
+@using NET_MVC_Razor.Models.Domain
 
-@inject SignInManager<UserEntity> SignInManager
-@inject UserManager<UserEntity> UserManager
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
