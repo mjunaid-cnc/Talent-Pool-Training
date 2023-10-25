@@ -8,6 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Task5.Application\Task5.Application.csproj" />
+    <ProjectReference Include="..\Todo.Application\Todo.Application.csproj" />
   </ItemGroup>
 
 </Project>
