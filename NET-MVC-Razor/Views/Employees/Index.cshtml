@@ -26,10 +26,30 @@
                 Id
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    Name
+                    @if (ViewData["NameSortParm"]!.ToString() == "name_desc")
+                    {
+                        <i class="fas fa-arrow-down"></i>
+                    }
+                    else
+                    {
+                        <i class="fas fa-arrow-up"></i>
+                    }
+                </a>
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["SalarySortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Salary</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["SalarySortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                    Salary
+                    @if (ViewData["SalarySortParm"]!.ToString() == "salary_desc")
+                    {
+                        <i class="fas fa-arrow-down"></i>
+                    }
+                    else if (ViewData["SalarySortParm"]!.ToString() == "Salary")
+                    {
+                        <i class="fas fa-arrow-up"></i>
+                    }
+                    </a>
             </th>
             <th>
                 Email
