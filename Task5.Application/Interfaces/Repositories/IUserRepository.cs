@@ -9,6 +9,7 @@ namespace Task5.Application.Interfaces.Repositories
 {
     public interface IUserRepository
     {
-        Task<User> GetUserByEmail(string email); 
+        Task<dynamic> GetUserByEmail(string email);
+        Task<int> AddUser(User user);
     }
 }

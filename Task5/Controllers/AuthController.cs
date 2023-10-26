@@ -5,6 +5,8 @@ using Task5.Domain.Models;
 
 namespace Task5.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -19,10 +21,17 @@ namespace Task5.Controllers
         {
             try
             {
-
+                var registrationResult = await _authService.Register(registerRequest);
+                if (!registrationResult.Success)
+                {
+                    return Ok(new Response { Success = false, Message = registrationResult.Message, StatusCode = StatusCodes.Status400BadRequest });
+                }
+                return Ok(new Response { Success = true, Message = "Registration successful", StatusCode = StatusCodes.Status200OK });
             }
             catch (Exception ex)
             {
-                return new Response { Success = false, Message = ex.Message, StatusCode = Stat };
+                return Ok(new Response { Success = false, Message = ex.Message, StatusCode = StatusCodes.Status500InternalServerError });
+            }
+        }
     }
 }

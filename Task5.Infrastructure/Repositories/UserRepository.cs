@@ -6,34 +6,40 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Task5.Application.Interfaces.Repositories;
 using Task5.Domain.Entities;
+using Task5.Infrastructure.DB;
 
 namespace Task5.Infrastructure.Repositories
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
         private readonly IConfiguration _configuration;
+        private Database db = new Database();
         public UserRepository(IConfiguration configuration)
         {
             _configuration = configuration;
         }
-        public async Task<User> GetUserByEmail(string email)
+        public async Task<dynamic> GetUserByEmail(string email)
         {
-            SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
-            SqlCommand cmd = new SqlCommand($"SELECT * FROM Users WHERE Email = {email}", con);
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
+            string query = $"SELECT * FROM Users WHERE Email = '{email}'";
+            DataTable dt = db.GetTable(query);
+            var userCount = dt.Rows.Count;
+            return userCount;
+        }
 
-            var user = new User
+        public async Task<int> AddUser(User user)
+        {
+            string query = "INSERT INTO Users(Name,Email,Password,Role) VALUES(@Name,@Email,@Password,@Role)";
+            var parameters = new IDataParameter[]
             {
-                Id = int.Parse(dt.Rows[0]["Id"].ToString()),
-                Name = dt.Rows[0]["Name"].ToString(),
-                Email = dt.Rows[0]["Emai"].ToString(),
-                Password = dt.Rows[0]["Password"].ToString()
-
+                new SqlParameter("@Name", user.Name),
+                new SqlParameter("@Email", user.Email),
+                new SqlParameter("@Password", user.Password),
+                new SqlParameter("@Role", user.Role)
             };
-            return user;
+            int insertResult = db.ExecuteData(query, parameters);
+            return insertResult;
         }
     }
 }

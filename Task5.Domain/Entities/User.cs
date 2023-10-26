@@ -19,5 +19,7 @@ namespace Task5.Domain.Entities
         [Required]
         [MaxLength(100)]
         public string Password { get; set; } = null!;
+        [Required]
+        public string Role { get; set; } = null!;
     }
 }

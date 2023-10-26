@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Task5.Application.Interfaces.Repositories;
 using Task5.Application.Interfaces.Services;
+using Task5.Domain.Mappers;
 using Task5.Domain.Models;
 
 namespace Task5.Infrastructure.Services
@@ -20,10 +21,18 @@ namespace Task5.Infrastructure.Services
         {
             try
             {
-                var user = await _userRepository.GetUserByEmail(registerRequest.Email);
-                if (user != null)
+                if (string.Equals(registerRequest.Role, Domain.Helpers.Roles.User))
+                var userCount = await _userRepository.GetUserByEmail(registerRequest.Email);
+                if (userCount != 0)
                 {
                     return new Response { Success = false, Message = "User already exists" };
+                }
+                var hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerRequest.Password);
+                var newUser = UserMapper.MapNewUser(registerRequest, hashedPassword);
+                int resultRows = await _userRepository.AddUser(newUser);
+                if (resultRows < 0)
+                {
+                    throw new ApplicationException("Something went wrong");
                 }
                 return new Response { Success = true };
             }
