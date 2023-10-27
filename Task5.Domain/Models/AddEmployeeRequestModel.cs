@@ -7,13 +7,15 @@ using System.Threading.Tasks;
 
 namespace Task5.Domain.Models
 {
-    public class LoginRequestModel
+    public class AddEmployeeRequestModel
     {
         [Required]
-        [EmailAddress]
-        public string Email { get; set; } = null!;
+        [MaxLength(100)]
+        public string Name { get; set; } = null!;
         [Required]
-        [MinLength(6)]
-        public string Password { get; set; } = null!;
+        public double Salary { get; set; }
+        [EmailAddress]
+        public string Email { get; set; }
+
     }
 }

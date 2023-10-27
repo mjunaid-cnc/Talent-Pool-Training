@@ -7,9 +7,10 @@ using Task5.Domain.Entities;
 
 namespace Task5.Application.Interfaces.Repositories
 {
-    public interface IUserRepository
+    public interface IEmployeeRepository
     {
-        Task<int> AddUser(User user);
-        Task<User?> GetUserByEmail(string email);
+        Task<int> AddEmployee(Employee employee);
+        Task<Employee?> GetEmployeeByEmail(string email);
+        Task<List<Employee>> GetEmployees();
     }
 }

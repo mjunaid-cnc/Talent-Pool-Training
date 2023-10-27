@@ -7,9 +7,9 @@ using Task5.Domain.Models;
 
 namespace Task5.Application.Interfaces.Services
 {
-    public interface IAuthService
+    public interface IEmployeeService
     {
-        Task<Response> Register(RegisterRequestModel registerRequest);
-        Task<Response> Login(LoginRequestModel loginRequestModel);
+        Task<Response> AddEmployee(AddEmployeeRequestModel addEmployeeRequest);
+        Task<Response> GetAllEmployees();
     }
 }

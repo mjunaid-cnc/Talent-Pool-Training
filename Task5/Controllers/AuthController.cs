@@ -33,5 +33,23 @@ namespace Task5.Controllers
                 return Ok(new Response { Success = false, Message = ex.Message, StatusCode = StatusCodes.Status500InternalServerError });
             }
         }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginRequestModel loginRequest)
+        {
+            try
+            {
+                var loginResult = await _authService.Login(loginRequest);
+                if (!loginResult.Success)
+                {
+                    return Ok(new Response { Success = false, Message = loginResult.Message, StatusCode = StatusCodes.Status400BadRequest });
+                }
+                return Ok(new Response { Success = true, Content = loginResult.Content, StatusCode = StatusCodes.Status200OK });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new Response { Success = false, Message = ex.Message, StatusCode = StatusCodes.Status500InternalServerError });
+            }
+        }
     }
 }

@@ -20,13 +20,6 @@ namespace Task5.Infrastructure.Repositories
         {
             _configuration = configuration;
         }
-        public async Task<dynamic> GetUserByEmail(string email)
-        {
-            string query = $"SELECT * FROM Users WHERE Email = '{email}'";
-            DataTable dt = db.GetTable(query);
-            var userCount = dt.Rows.Count;
-            return userCount;
-        }
 
         public async Task<int> AddUser(User user)
         {
@@ -40,6 +33,25 @@ namespace Task5.Infrastructure.Repositories
             };
             int insertResult = db.ExecuteData(query, parameters);
             return insertResult;
+        }
+
+        public async Task<User?> GetUserByEmail(string email)
+        {
+            string query = $"SELECT * FROM Users WHERE Email = '{email}'";
+            DataTable dt = db.GetTable(query);
+            if (dt.Rows.Count > 0)
+            {
+                var user = new User
+                {
+                    Id = int.Parse(dt.Rows[0]["Id"].ToString()!),
+                    Name = dt.Rows[0]["Name"].ToString()!,
+                    Email = dt.Rows[0]["Email"].ToString()!,
+                    Password = dt.Rows[0]["Password"].ToString()!,
+                    Role = dt.Rows[0]["Role"].ToString()!
+                };
+                return user;
+            }
+            return null;
         }
     }
 }
