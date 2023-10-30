@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Task5.Domain.Models;
 
 namespace Task5.Infrastructure.DB
 {
@@ -53,6 +54,32 @@ namespace Task5.Infrastructure.DB
             }
 
             return rows;
+        }
+
+        public dynamic ExecuteStoredProcedure(AddEmployeeRequestModel addEmployeeRequest)
+        {
+            SqlConnection con = new SqlConnection(connectionString);
+            SqlCommand cmd;
+            SqlDataAdapter da;
+            DataTable dt = new DataTable();
+
+            try
+            {
+                cmd = new SqlCommand("SP_EMPLOYEES", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@action", addEmployeeRequest.ActionId);
+                cmd.Parameters.AddWithValue("@Id", addEmployeeRequest.EmployeeId);
+                cmd.Parameters.AddWithValue("@Name", addEmployeeRequest.Name);
+                cmd.Parameters.AddWithValue("@Salary", addEmployeeRequest.Salary);
+                cmd.Parameters.AddWithValue("@Email", addEmployeeRequest.Email);
+                da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

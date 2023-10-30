@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
 using Task5.ActionFilters;
 using Task5.Application.Interfaces.Services;
+using Task5.Domain.Entities;
 using Task5.Domain.Models;
 
 namespace Task5.Controllers
@@ -57,6 +59,38 @@ namespace Task5.Controllers
             {
                 var getEmployeeResult = await _employeeService.GetEmployeeById(id);
                 return Ok(new Response { Success = true, Content = getEmployeeResult.Content, StatusCode = StatusCodes.Status200OK });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new Response { Success = false, Message = ex.Message, StatusCode = StatusCodes.Status500InternalServerError });
+            }
+        }
+
+        [HttpPost("delete-or-update")]
+        public IActionResult DeleteAndUpdateEmployee(AddEmployeeRequestModel employeeRequestModel)
+        {
+            try
+            {
+                var deleteOrEditResult = _employeeService.DeleteOrEditEmployee(employeeRequestModel);
+                if (!deleteOrEditResult.Success)
+                    return Ok(new Response { Success = false, Message = "Something went wrong", StatusCode = StatusCodes.Status500InternalServerError });
+                return Ok(new Response { Success = true, StatusCode = StatusCodes.Status200OK });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new Response { Success = false, Message = ex.Message, StatusCode = StatusCodes.Status500InternalServerError });
+            }
+        }
+
+        [HttpPost("upload-excel")]
+        public async Task<IActionResult> UploadExcel(IFormFile file)
+        {
+            try
+            {
+                var uploadExcelResult = await _employeeService.UploadBulkData(file);
+                if (!uploadExcelResult.Success)
+                    return Ok(new Response { Success = false, StatusCode = StatusCodes.Status400BadRequest });
+                return Ok(new Response { Success = true, StatusCode= StatusCodes.Status200OK });
             }
             catch (Exception ex)
             {

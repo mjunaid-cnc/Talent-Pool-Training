@@ -9,6 +9,9 @@ namespace Task5.Domain.Models
 {
     public class AddEmployeeRequestModel
     {
+        [Range(1,2)]
+        public int? ActionId { get; set; }
+        public int? EmployeeId { get; set; }
         [Required]
         [MaxLength(100)]
         public string Name { get; set; } = null!;

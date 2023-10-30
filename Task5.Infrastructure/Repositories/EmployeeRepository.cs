@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Task5.Application.Interfaces.Repositories;
 using Task5.Domain.Entities;
+using Task5.Domain.Models;
 using Task5.Infrastructure.DB;
 
 namespace Task5.Infrastructure.Repositories
@@ -91,6 +92,19 @@ namespace Task5.Infrastructure.Repositories
                 return employee;
             }
             return null;
+        }
+
+        public dynamic DeleteOrUpdateSP(AddEmployeeRequestModel employeeRequestModel)
+        {
+            try
+            {
+                db.ExecuteStoredProcedure(employeeRequestModel);
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

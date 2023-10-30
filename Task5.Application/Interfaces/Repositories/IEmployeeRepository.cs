@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Task5.Domain.Entities;
+using Task5.Domain.Models;
 
 namespace Task5.Application.Interfaces.Repositories
 {
@@ -13,5 +14,7 @@ namespace Task5.Application.Interfaces.Repositories
         Task<Employee?> GetEmployeeByEmail(string email);
         Task<List<Employee>> GetEmployees();
         Employee? GetEmployeeById(int id);
+        dynamic DeleteOrUpdateSP(AddEmployeeRequestModel employeeRequestModel);
+         
     }
 }
