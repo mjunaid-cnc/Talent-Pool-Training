@@ -12,6 +12,7 @@ namespace NET_MVC_Razor.Data
 
         public DbSet<Item> Items { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Employee> Employee { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
