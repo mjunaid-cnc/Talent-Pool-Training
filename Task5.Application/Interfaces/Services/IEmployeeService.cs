@@ -11,5 +11,6 @@ namespace Task5.Application.Interfaces.Services
     {
         Task<Response> AddEmployee(AddEmployeeRequestModel addEmployeeRequest);
         Task<Response> GetAllEmployees();
+        Task<Response> GetEmployeeById(int id);
     }
 }

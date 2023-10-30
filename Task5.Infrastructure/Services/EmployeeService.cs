@@ -66,5 +66,19 @@ namespace Task5.Infrastructure.Services
             }
         }
 
+        public async Task<Response> GetEmployeeById(int id)
+        {
+            try
+            {
+                int userId = _userResolver.GetUserId();
+                string role = _userResolver.GetUserRole();
+                var employee = _employeeRepository.GetEmployeeById(id);
+                return new Response { Content = employee };
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

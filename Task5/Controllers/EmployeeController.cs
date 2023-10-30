@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Task5.ActionFilters;
 using Task5.Application.Interfaces.Services;
 using Task5.Domain.Models;
 
@@ -39,8 +40,23 @@ namespace Task5.Controllers
         {
             try
             {
-                var addEmployeeResult = await _employeeService.GetAllEmployees();
-                return Ok(new Response { Success = true, Content = addEmployeeResult.Content, StatusCode = StatusCodes.Status200OK });
+                var getEmployeesResult = await _employeeService.GetAllEmployees();
+                return Ok(new Response { Success = true, Content = getEmployeesResult.Content, StatusCode = StatusCodes.Status200OK });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new Response { Success = false, Message = ex.Message, StatusCode = StatusCodes.Status500InternalServerError });
+            }
+        }
+
+        [ServiceFilter(typeof(CheckUserAccessActionFilter))]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetEmployeeById(int id)
+        {
+            try
+            {
+                var getEmployeeResult = await _employeeService.GetEmployeeById(id);
+                return Ok(new Response { Success = true, Content = getEmployeeResult.Content, StatusCode = StatusCodes.Status200OK });
             }
             catch (Exception ex)
             {

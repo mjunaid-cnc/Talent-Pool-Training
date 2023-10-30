@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Task5.ActionFilters;
 using Task5.Application.Interfaces.Repositories;
 using Task5.Application.Interfaces.Services;
 using Task5.Infrastructure.Repositories;
@@ -10,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<CheckUserAccessActionFilter>();
 builder.Services.AddScoped<IUserResolverService, UserResolverService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();

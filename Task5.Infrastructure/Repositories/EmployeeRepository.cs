@@ -36,6 +36,7 @@ namespace Task5.Infrastructure.Repositories
             {
                 var employee = new Employee()
                 {
+                    Id = int.Parse(dt.Rows[0]["Id"].ToString()!),
                     Name = dt.Rows[0]["Name"].ToString()!,
                     Salary = double.Parse(dt.Rows[0]["Salary"].ToString()!),
                     Email = dt.Rows[0]["Email"].ToString()!,
@@ -71,6 +72,25 @@ namespace Task5.Infrastructure.Repositories
             {
                 throw;
             }
+        }
+
+        public Employee? GetEmployeeById(int id)
+        {
+            string query = $"SELECT * FROM Employees WHERE Id = {id}";
+            DataTable dt = db.GetTable(query);
+            if (dt.Rows.Count > 0)
+            {
+                var employee = new Employee()
+                {
+                    Id = int.Parse(dt.Rows[0]["Id"].ToString()!),
+                    Name = dt.Rows[0]["Name"].ToString()!,
+                    Salary = double.Parse(dt.Rows[0]["Salary"].ToString()!),
+                    Email = dt.Rows[0]["Email"].ToString()!,
+                    UserId = int.Parse(dt.Rows[0]["UserId"].ToString()!)
+                };
+                return employee;
+            }
+            return null;
         }
     }
 }
