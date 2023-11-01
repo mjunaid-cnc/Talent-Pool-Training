@@ -33,7 +33,7 @@ namespace Task5.Controllers
             }
             catch (Exception ex)
             {
-                return Problem(ex.Message);
+                return Ok(new Response {Message = ex.Message, StatusCode = StatusCodes.Status500InternalServerError });
             }
         }
 
@@ -73,7 +73,7 @@ namespace Task5.Controllers
             {
                 var deleteOrEditResult = _employeeService.DeleteOrEditEmployee(employeeRequestModel);
                 if (!deleteOrEditResult.Success)
-                    return Ok(new Response { Success = false, Message = "Something went wrong", StatusCode = StatusCodes.Status500InternalServerError });
+                    return Ok(new Response { Success = false, Message = deleteOrEditResult.Message, StatusCode = StatusCodes.Status400BadRequest });
                 return Ok(new Response { Success = true, StatusCode = StatusCodes.Status200OK });
             }
             catch (Exception ex)

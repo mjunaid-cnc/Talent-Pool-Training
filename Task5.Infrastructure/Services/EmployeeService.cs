@@ -87,6 +87,9 @@ namespace Task5.Infrastructure.Services
         {
             try
             {
+                var existingEmployee = _employeeRepository.GetEmployeeByEmail(employeeRequestModel.Email).Result;
+                if (existingEmployee != null && existingEmployee.Email == employeeRequestModel.Email && existingEmployee.Id != employeeRequestModel.EmployeeId)
+                    return new Response { Success = false, Message = "Email already exists" };
                 bool successFlag = _employeeRepository.DeleteOrUpdateSP(employeeRequestModel);
                 if (!successFlag)
                 {

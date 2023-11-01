@@ -10,6 +10,17 @@ using Task5.Infrastructure.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAnyOrigin",
+        builder =>
+        {
+            builder
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<CheckUserAccessActionFilter>();
 builder.Services.AddScoped<IUserResolverService, UserResolverService>();
@@ -41,6 +52,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+app.UseCors("AllowAnyOrigin");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
