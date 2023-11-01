@@ -33,7 +33,7 @@ namespace Task5.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(new Response { Success = false, Message = ex.Message, StatusCode = StatusCodes.Status500InternalServerError });
+                return Problem(ex.Message);
             }
         }
 
