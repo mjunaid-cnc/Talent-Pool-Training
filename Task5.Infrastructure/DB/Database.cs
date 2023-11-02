@@ -12,9 +12,9 @@ namespace Task5.Infrastructure.DB
 {
     public class Database
     {
-        private static readonly string connectionString = "Server =.; Database=Task5;TrustServerCertificate=True;Integrated Security = true;";
-        public DataTable GetTable(string str)
+        public DataTable GetTable(string str, IConfiguration configuration)
         {
+            string connectionString = configuration.GetConnectionString("DefaultConnection");
             DataTable objResult = new DataTable();
             SqlDataReader reader;
 
@@ -33,8 +33,9 @@ namespace Task5.Infrastructure.DB
             return objResult;
         }
 
-        public int ExecuteData(string str, params IDataParameter[] sqlParams)
+        public int ExecuteData(IConfiguration configuration, string str, params IDataParameter[] sqlParams)
         {
+            string connectionString = configuration.GetConnectionString("DefaultConnection");
             int rows = -1;
 
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -56,8 +57,10 @@ namespace Task5.Infrastructure.DB
             return rows;
         }
 
-        public dynamic ExecuteStoredProcedure(AddEmployeeRequestModel addEmployeeRequest)
+        public dynamic ExecuteStoredProcedure(AddEmployeeRequestModel addEmployeeRequest, IConfiguration configuration)
         {
+            string connectionString = configuration.GetConnectionString("DefaultConnection");
+
             SqlConnection con = new SqlConnection(connectionString);
             SqlCommand cmd;
             SqlDataAdapter da;

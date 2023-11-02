@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Task5.Application.Interfaces.Repositories;
 using Task5.Application.Interfaces.Services;
 using Task5.Domain.Entities;
+using Task5.Domain.Helpers;
 using Task5.Domain.Mappers;
 using Task5.Domain.Models;
 
@@ -28,23 +29,23 @@ namespace Task5.Infrastructure.Services
         {
             try
             {
-                if (string.Equals(registerRequest.Role, Domain.Helpers.Roles.User.ToString()))
+                if (string.Equals(registerRequest.Role, Roles.User.ToString()))
                 {
                     var user = await _userRepository.GetUserByEmail(registerRequest.Email);
                     if (user != null)
                     {
-                        return new Response { Success = false, Message = "User already exists" };
+                        return new Response { Success = false, Message = Constants.UserAlreadyExists()};
                     }
                     var hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerRequest.Password);
                     var newUser = UserMapper.MapNewUser(registerRequest, hashedPassword);
                     int resultRows = await _userRepository.AddUser(newUser);
                     if (resultRows < 0)
                     {
-                        throw new ApplicationException("Something went wrong");
+                        throw new ApplicationException(Constants.SomethingWentWrong());
                     }
                     return new Response { Success = true };
                 }
-                return new Response { Success = false, Message = "Unauthorized request" };
+                return new Response { Success = false, Message = Constants.UnauthorizedRequest() };
             }
             catch (Exception)
             {
@@ -58,16 +59,16 @@ namespace Task5.Infrastructure.Services
             {
                 var user = await _userRepository.GetUserByEmail(loginRequestModel.Email);
                 if (user == null)
-                    return new Response { Success = false, Message = "Incorrect email" };
+                    return new Response { Success = false, Message = Constants.UserDoesNotExist() };
                 bool isCorrectPassword = BCrypt.Net.BCrypt.Verify(loginRequestModel.Password, user.Password);
                 if (!isCorrectPassword)
-                    return new Response { Success = false, Message = "Incorrect password" };
+                    return new Response { Success = false, Message = Constants.IncorrectPassword() };
                 
                 var jwtSigningKey = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]!);
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var tokenDescriptor = new SecurityTokenDescriptor()
                 {
-                    Subject = new System.Security.Claims.ClaimsIdentity(new Claim[]
+                    Subject = new ClaimsIdentity(new Claim[]
                     {
                         new Claim("id", user.Id.ToString()),
                         new Claim(ClaimTypes.Name, user.Name),

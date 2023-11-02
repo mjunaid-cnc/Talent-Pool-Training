@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,6 +15,10 @@ namespace Task5.Infrastructure.Repositories
 {
     public class EmployeeRepository : IEmployeeRepository
     {
+        private readonly IConfiguration _configuration;
+        public EmployeeRepository(IConfiguration configuration) {
+            _configuration = configuration;
+        }
         Database db = new Database();
         public async Task<int> AddEmployee(Employee employee)
         {
@@ -25,14 +30,14 @@ namespace Task5.Infrastructure.Repositories
                     new SqlParameter("@Email", employee.Email),
                     new SqlParameter("@UserId", employee.UserId)
                 };
-            int resultRows = db.ExecuteData(query, parameters);
+            int resultRows = db.ExecuteData(_configuration, query, parameters);
             return resultRows;
         }
 
         public async Task<Employee?> GetEmployeeByEmail(string email)
         {
             string query = $"SELECT * FROM Employees WHERE Email = '{email}'";
-            DataTable dt = db.GetTable(query);
+            DataTable dt = db.GetTable(query, _configuration);
             if (dt.Rows.Count > 0)
             {
                 var employee = new Employee()
@@ -53,7 +58,7 @@ namespace Task5.Infrastructure.Repositories
             try
             {
                 string query = "SELECT * FROM Employees";
-                DataTable dt = db.GetTable(query);
+                DataTable dt = db.GetTable(query, _configuration);
                 List<Employee> employees = new List<Employee>();
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
@@ -78,7 +83,7 @@ namespace Task5.Infrastructure.Repositories
         public Employee? GetEmployeeById(int id)
         {
             string query = $"SELECT * FROM Employees WHERE Id = {id}";
-            DataTable dt = db.GetTable(query);
+            DataTable dt = db.GetTable(query, _configuration);
             if (dt.Rows.Count > 0)
             {
                 var employee = new Employee()
@@ -98,7 +103,7 @@ namespace Task5.Infrastructure.Repositories
         {
             try
             {
-                db.ExecuteStoredProcedure(employeeRequestModel);
+                db.ExecuteStoredProcedure(employeeRequestModel, _configuration);
                 return true;
             }
             catch (Exception)

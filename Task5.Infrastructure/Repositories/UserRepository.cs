@@ -31,14 +31,14 @@ namespace Task5.Infrastructure.Repositories
                 new SqlParameter("@Password", user.Password),
                 new SqlParameter("@Role", user.Role)
             };
-            int insertResult = db.ExecuteData(query, parameters);
+            int insertResult = db.ExecuteData(_configuration, query, parameters);
             return insertResult;
         }
 
         public async Task<User?> GetUserByEmail(string email)
         {
             string query = $"SELECT * FROM Users WHERE Email = '{email}'";
-            DataTable dt = db.GetTable(query);
+            DataTable dt = db.GetTable(query, _configuration);
             if (dt.Rows.Count > 0)
             {
                 var user = new User
