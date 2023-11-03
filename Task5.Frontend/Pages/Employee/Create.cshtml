@@ -1,0 +1,93 @@
+﻿@page
+@model Task5.Frontend.Pages.Employee.CreateModel
+@{
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <h2 class="text-center">Create Employee</h2>
+                <div id="success-message" class="text-danger"></div>
+                <form id="employeeForm">
+                    <div class="form-group">
+                        <label for="inputName">Name</label>
+                        <input type="text" class="form-control" id="inputName" placeholder="Enter employee name"
+                               required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputSalary">Salary</label>
+                        <input type="number" class="form-control" id="inputSalary" placeholder="Enter employee salary"
+                               required min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail">Email</label>
+                        <input type="email" class="form-control" id="inputEmail" placeholder="Enter employee email"
+                               required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Create Employee</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    @* <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script> *@
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        var token = localStorage.getItem("jwt");
+
+        if (token) {
+            $(document).ready(function () {
+                $("#employeeForm").submit(function (e) {
+                    e.preventDefault();
+
+                    var name = $("#inputName").val();
+                    var salary = $("#inputSalary").val();
+                    var email = $("#inputEmail").val();
+
+                    var formData = {
+                        Name: name,
+                        Salary: salary,
+                        Email: email
+                    };
+
+                    $.ajax({
+                        type: "POST",
+                        url: "https://localhost:7035/api/Employee",
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        },
+                        data: JSON.stringify(formData),
+                        contentType: "application/json",
+                        success: function (data) {
+                            if (!data.success) {
+                                $("#success-message").text(data.message);
+                            }
+                            else {
+                                window.location.href = "/Employee/Index"
+                            }
+                        },
+                        error: function (error) {
+                            $("#success-message").text("Error: " + error.responseText);
+                        }
+                    });
+                });
+            });
+        }
+        else {
+            window.location.href = "/Account/Login"
+        }
+    </script>
+</body>
+
+</html>
