@@ -47,7 +47,6 @@ public class Function
     /// <returns></returns>
     public async Task FunctionHandler(S3Event evnt, ILambdaContext context)
     {
-        UserRepository userRepository = new UserRepository();
         var eventRecords = evnt.Records ?? new List<S3Event.S3EventNotificationRecord>();
         foreach (var record in eventRecords)
         {
