@@ -1,0 +1,79 @@
+﻿@page
+@model LoginModel
+@{
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <h2 class="text-center">Login</h2>
+                <div id="error-message" class="text-danger"></div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="inputEmail">Email</label>
+                        <input type="email" class="form-control" id="inputEmail" placeholder="Enter your email"
+                               required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword">Password</label>
+                        <input type="password" class="form-control" id="inputPassword" placeholder="Enter your password"
+                               required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+@*     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+ *@    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#loginForm").submit(function (e) {
+                e.preventDefault();
+
+                var email = $("#inputEmail").val();
+                var password = $("#inputPassword").val();
+
+                var formData = {
+                    Email: email,
+                    Password: password
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "https://localhost:7035/api/Auth/login",
+                    data: JSON.stringify(formData),
+                    contentType: "application/json",
+                    success: function (data) {
+                        if (!data.success) {
+                            $("#error-message").text(data.message);
+                        }
+                        else {
+                            localStorage.setItem("jwt", data.content)
+                            window.location.href = "/Employee/Index"
+                        }
+
+                    },
+                    error: function (error) {
+                        $("#error-message").text(data.message);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
