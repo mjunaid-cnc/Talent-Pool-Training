@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,9 +17,11 @@ namespace Task6_AWS.Helpers
     {
         public static async Task<string?> GetConnectionString()
         {
-            var builder = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-            var config = builder.Build();
+            var assemblyLocation = Assembly.GetExecutingAssembly().Location;
+            var config = new ConfigurationBuilder()
+                .SetBasePath(Path.GetDirectoryName(assemblyLocation))
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true).Build();
+
             string dbName = config["DbName"];
             string secretName = config["SecretName"];
             string region = config["Region"];

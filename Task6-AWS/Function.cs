@@ -3,12 +3,17 @@ using Amazon.Lambda.S3Events;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Util;
+using Amazon.SecretsManager.Model;
+using Amazon.SecretsManager;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using Models;
 using Newtonsoft.Json;
 using System.Xml.Linq;
 using Task6_AWS.Entities;
 using Task6_AWS.Helpers;
+using Amazon;
+using System.Reflection;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
@@ -48,6 +53,7 @@ public class Function
     public async Task FunctionHandler(S3Event evnt, ILambdaContext context)
     {
         var eventRecords = evnt.Records ?? new List<S3Event.S3EventNotificationRecord>();
+        var userRepo = new UserRepository();
         foreach (var record in eventRecords)
         {
             var s3Event = record.S3;
@@ -64,26 +70,10 @@ public class Function
                 {
                     using var reader = new StreamReader(file.ResponseStream);
                     var fileContents = await reader.ReadToEndAsync();
-                    LambdaLogger.Log(fileContents);
                     var user = JsonConvert.DeserializeObject<User>(fileContents);
                     if (user != null)
                     {
-                        var connectionString = $"Server=database-1.c1jusiebdoer.eu-north-1.rds.amazonaws.com;Database=Task6;User ID=admin;Password=everton12;";
-                        LambdaLogger.Log(connectionString);
-                        using (SqlConnection connection = new SqlConnection(connectionString))
-                        {
-                            connection.Open();
-                            string insertQuery = "INSERT INTO Users(Username, Email, Company) VALUES (@Username, @Email, @Company)";
-
-                            using (SqlCommand command = new SqlCommand(insertQuery, connection))
-                            {
-                                command.Parameters.AddWithValue("@Username", user.Username);
-                                command.Parameters.AddWithValue("@Email", user.Email);
-                                command.Parameters.AddWithValue("@Company", user.Company);
-
-                                command.ExecuteNonQuery();
-                            }
-                        }
+                        await userRepo.AddUser(user);
                         user.Company = "Netsol";
                         string modifiedJson = JsonConvert.SerializeObject(user);
                         string processedKey = "processed_" + s3Event.Object.Key;
