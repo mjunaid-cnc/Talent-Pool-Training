@@ -1,0 +1,147 @@
+﻿@page
+@model Task9.Frontend.Pages.Employees.IndexModel
+@{
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employees</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="mt-4">Employee List</h1>
+        <form id="uploadFileForm" method="post" enctype="multipart/form-data">
+            <label for="uploadFileBtn">Choose a file:</label>
+            <input type="file" id="uploadFileBtn" accept=".json" />
+            <br />
+            <input class="btn btn-primary" type="button" value="Submit" onclick="uploadFile()" />
+        </form>
+        <div id="error-message" class="text-danger"></div>
+        <div id="success-message" class="text-success"></div>
+        <div id="notification-container" class="text-success"></div>
+
+        <table class="table table-bordered table-striped mt-4">
+            <thead>
+                <tr>
+                    <th>Employee ID</th>
+                    <th>Employee Name</th>
+                    <th>Salary</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody id="employeeList">
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    @* <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script> *@
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.10/signalr.min.js"></script>
+
+
+    <script>
+
+        function pollBackendAPI() {
+            var apiEndpoint = 'http://task7api2-dev.eba-m43bikep.eu-north-1.elasticbeanstalk.com/api/Employee/get-all';
+
+            fetch(apiEndpoint)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('API Response:', data);
+                    var employeeList = document.getElementById('employeeList');
+
+                    employeeList.innerHTML = '';
+
+                    data.content.forEach(function (employee, index) {
+                        var row = '<tr>' +
+                            '<td>' + ++index + '</td>' +
+                            '<td>' + employee.name + '</td>' +
+                            '<td>' + employee.salary + '</td>' +
+                            '<td>' + employee.email + '</td>' +
+                            '</tr>';
+                        employeeList.innerHTML += row;
+                    });
+                })
+                .catch(error => {
+                    let errorMsg = document.getElementById("error-message");
+                    errorMsg.innerHTML = error;
+                });
+        }
+
+        var pollingInterval = 30 * 1000;
+
+        pollBackendAPI();
+        setInterval(pollBackendAPI, pollingInterval);
+
+        var connection = new signalR.HubConnectionBuilder().withUrl("/ws").build();
+
+        connection.on("ReceiveMessage", function (message) {
+            var notificationContainer = document.getElementById("notification-container");
+            var notificationElement = document.createElement("div");
+            notificationElement.textContent = message;
+            notificationContainer.appendChild(notificationElement);
+        });
+
+        connection.start().catch(function (err) {
+            return console.error(err.toString());
+        });
+
+        function uploadFile() {
+            var fileInput = document.getElementById('uploadFileBtn');
+            let errorMsg = document.getElementById("error-message");
+            let successMsg = document.getElementById("success-message");
+            var file = fileInput.files[0];
+
+            if (file) {
+                var formData = new FormData();
+                formData.append('file', file);
+
+                fetch('http://task7api2-dev.eba-m43bikep.eu-north-1.elasticbeanstalk.com/api/Employee/post', {
+                    method: 'POST',
+                    body: formData,
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log('File uploaded successfully:', data);
+                            successMsg.innerHTML = data.message;
+                            setTimeout(() => {
+                                successMsg.style.display = 'none';
+                            }, 4000)
+
+                        }
+                        else {
+                            errorMsg.innerHTML = data.message;
+                            setTimeout(() => {
+                                errorMsg.style.display = 'none';
+                            }, 2000)
+                        }
+
+                    })
+                    .catch(error => {
+                        console.error('Error uploading file:', error);
+                        errorMsg.innerHTML = error;
+                    });
+            } else {
+                console.error('No file selected');
+                errorMsg.innerHTML = 'No file selected';
+            }
+        }
+
+    </script>
+</body>
+
+</html>
+
