@@ -13,6 +13,7 @@ using System.Text.Json;
 using Task7SQSLambda.Helpers;
 using Task7SQSLambda.Models;
 using Task7SQSLambda.Repositories;
+using Task7SQSLambda.Helpers;
 
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
@@ -70,29 +71,35 @@ public class Function
             if (s3Info.Length == 2)
             {
 
-            }
-            using (var response = await _s3Client.GetObjectAsync(objectReq))
-            {
-                using (var streamReader = new StreamReader(response.ResponseStream))
-                {
-                    var jsonContent = await streamReader.ReadToEndAsync();
-                    context.Logger.Log("S3 content: " + jsonContent.ToString());
-                    var employee = JsonSerializer.Deserialize<EmployeeModel>(jsonContent) ?? throw new Exception("File data is incorrect");
-                    var userRepo = new UserRepo();
-                    await userRepo.AddEmployee(employee);
-                }
-            }
-            var creds = await CredentialsHelper.GetAWSCredentials();
-            var credentials = new BasicAWSCredentials(creds.AccessKey, creds.AccessSecret);
-            var client = new AmazonSimpleNotificationServiceClient(credentials, Amazon.RegionEndpoint.EUNorth1);
-            var request = new PublishRequest()
-            {
-                TopicArn = "arn:aws:sns:eu-north-1:792835767734:task7-sns",
-                Message = "File successfully processed"
-            };
 
-            await client.PublishAsync(request);
-            await Task.CompletedTask;
+                using (var response = await _s3Client.GetObjectAsync(objectReq))
+                {
+                    using (var streamReader = new StreamReader(response.ResponseStream))
+                    {
+                        var jsonContent = await streamReader.ReadToEndAsync();
+                        context.Logger.Log("S3 content: " + jsonContent.ToString());
+                        var employee = JsonSerializer.Deserialize<EmployeeModel>(jsonContent) ?? throw new Exception("File data is incorrect");
+                        var userRepo = new UserRepo();
+                        await userRepo.AddEmployee(employee);
+                    }
+                }
+                var creds = await CredentialsHelper.GetAWSCredentials();
+                var credentials = new BasicAWSCredentials(creds.AccessKey, creds.AccessSecret);
+                var client = new AmazonSimpleNotificationServiceClient(credentials, Amazon.RegionEndpoint.EUNorth1);
+                var request = new PublishRequest()
+                {
+                    TopicArn = "arn:aws:sns:eu-north-1:792835767734:task7-sns",
+                    Message = Constants.FileSuccessfullyProcessed()
+                };
+
+                await client.PublishAsync(request);
+                await Task.CompletedTask;
+            }
+
+            else
+            {
+                context.Logger.LogInformation(Constants.InvalidFilename());
+            }
         }
         catch (Exception ex)
         {
