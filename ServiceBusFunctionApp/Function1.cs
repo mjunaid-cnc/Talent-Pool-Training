@@ -6,20 +6,22 @@ using System.Threading.Tasks;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.SignalRService;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OfficeOpenXml;
 using ServiceBusFunctionApp.Helpers;
-using ServiceBusFunctionApp.Models;
 
 namespace ServiceBusFunctionApp
 {
     public class Function1
     {
         [FunctionName("Function1")]
-        public async Task RunAsync([ServiceBusTrigger("task9-queue", Connection = "AzureWebJobsStorage")] string myQueueItem, ILogger log)
+        public async Task RunAsync([ServiceBusTrigger("task9-queue", Connection = "AzureWebJobsStorage")] string myQueueItem,
+            [SignalR(HubName = "Task9Hub")] IAsyncCollector<SignalRMessage> signalRMessages,
+            ILogger log)
         {
             log.LogInformation($"C# ServiceBus queue trigger function processed message: {myQueueItem}");
             var queueItemArray = myQueueItem.Split(':');
@@ -51,6 +53,13 @@ namespace ServiceBusFunctionApp
                     var processedBlobClient = destinationBlobContainerClient.GetBlobClient(Guid.NewGuid() + ProcessedFilename.Test.ToString() + "." + FileExtensions.json.ToString());
                     using var stream = new MemoryStream(Encoding.UTF8.GetBytes(jsonContent));
                     await processedBlobClient.UploadAsync(stream, true);
+
+                    var message = new SignalRMessage
+                    {
+                        Target = "FileProcessed",
+                        Arguments = new[] { "File processed successfully" }
+                    };
+                    await signalRMessages.AddAsync(message);
                 }
                 catch (Exception e)
                 {

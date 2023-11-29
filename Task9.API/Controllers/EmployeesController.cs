@@ -69,7 +69,6 @@ namespace Task9.API.Controllers
                                 throw new Exception("The message is too large to fit in the batch.");
                             }
                         }
-
                         try
                         {
                             await sender.SendMessagesAsync(messageBatch);
@@ -79,7 +78,6 @@ namespace Task9.API.Controllers
                             await sender.DisposeAsync();
                             await client.DisposeAsync();
                         }
-
                         return Ok(new Response { Success = true, Message = "File is being processed...", StatusCode = StatusCodes.Status200OK });
                     }
                 }
