@@ -1,0 +1,7 @@
+{
+    "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "Endpoint=sb://talent-pool-task9.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=Mb5fyE8/X6WRoxhl69+UJSDYdGFbwVm5a+ASbExsgb4=",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet"
+  }
+}
