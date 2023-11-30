@@ -1,9 +1,13 @@
 ﻿using Azure.Messaging.ServiceBus;
 using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json.Serialization;
 using Task9.API.Models;
 
 namespace Task9.API.Controllers
@@ -44,10 +48,10 @@ namespace Task9.API.Controllers
                         {
                             await memoryStream.CopyToAsync(stream);
                         }
-                            var blobServiceClient = new BlobServiceClient(storageAccountConnectionString);
-                            var containerClient = blobServiceClient.GetBlobContainerClient(containerName);
-                            var blobClient = containerClient.GetBlobClient(uniqueFilename);
-                            await blobClient.UploadAsync(destinationFilePath, true);
+                        var blobServiceClient = new BlobServiceClient(storageAccountConnectionString);
+                        var containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+                        var blobClient = containerClient.GetBlobClient(uniqueFilename);
+                        await blobClient.UploadAsync(destinationFilePath, true);
 
                         string serviceBusConnectionString = _configuration["ServiceBusConnectionString"];
                         string queueName = _configuration["QueueName"];
@@ -86,7 +90,41 @@ namespace Task9.API.Controllers
                     return Ok(new Response { Success = false, Message = "Incorrect file format or file not uploaded", StatusCode = StatusCodes.Status400BadRequest });
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
+            {
+                return Ok(new Response { Success = false, Message = ex.Message, StatusCode = StatusCodes.Status500InternalServerError });
+            }
+        }
+
+        [HttpGet("get-all")]
+        public async Task<IActionResult> GetEmployeeDataFromBlob(string blobInfo)
+        {
+            try
+            {
+                var array = blobInfo.Split(':');
+                if (array.Length == 2)
+                {
+                    var containerName = array[0];
+                    var blobName = array[1];
+                    var connectionString = _configuration["StorageAccountConnectionString"];
+                    var containerClient = new BlobContainerClient(connectionString, containerName);
+                    var blobClient = containerClient.GetBlobClient(blobName);
+                    BlobDownloadInfo downloadedBlobContent = blobClient.Download();
+                    using (var streamReader = new StreamReader(downloadedBlobContent.Content))
+                    {
+                        var jsoncontent = await streamReader.ReadToEndAsync();
+                        var employeeData = JsonConvert.DeserializeObject<List<EmployeeModel>>(jsoncontent);
+
+
+                        return Ok(new Response { Success = true, Content = employeeData, StatusCode = StatusCodes.Status200OK });
+                    }
+                }
+                else
+                {
+                    return Ok(new Response { Success = false, Message = "Incorrect data", StatusCode = StatusCodes.Status400BadRequest });
+                }
+            }
+            catch (Exception ex)
             {
                 return Ok(new Response { Success = false, Message = ex.Message, StatusCode = StatusCodes.Status500InternalServerError });
             }

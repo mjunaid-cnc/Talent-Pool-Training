@@ -18,13 +18,15 @@
         <h1 class="mt-4">Employee List</h1>
         <form id="uploadFileForm" method="post" enctype="multipart/form-data">
             <label for="uploadFileBtn">Choose a file:</label>
-            <input type="file" id="uploadFileBtn" accept=".json" />
+            <input type="file" id="uploadFileBtn" accept=".xlsx" />
             <br />
             <input class="btn btn-primary" type="button" value="Submit" onclick="uploadFile()" />
         </form>
         <div id="error-message" class="text-danger"></div>
         <div id="success-message" class="text-success"></div>
         <div id="notification-container" class="text-success"></div>
+        <div id="notification-success-container" class="text-success"></div>
+
 
         <table class="table table-bordered table-striped mt-4">
             <thead>
@@ -43,13 +45,12 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @* <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script> *@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.10/signalr.min.js"></script>
-
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
 
     <script>
 
-        function pollBackendAPI() {
-            var apiEndpoint = 'http://task7api2-dev.eba-m43bikep.eu-north-1.elasticbeanstalk.com/api/Employee/get-all';
+        function pollBackendAPI(blobInfo) {
+            var apiEndpoint = `https://localhost:7005/api/Employees/get-all?blobInfo=${blobInfo}`;
 
             fetch(apiEndpoint)
                 .then(response => {
@@ -76,27 +77,9 @@
                 })
                 .catch(error => {
                     let errorMsg = document.getElementById("error-message");
-                    errorMsg.innerHTML = 'hello';
+                    errorMsg.innerHTML = "Incorrect data";
                 });
         }
-
-        var pollingInterval = 30 * 1000;
-
-        pollBackendAPI();
-        setInterval(pollBackendAPI, pollingInterval);
-
-        var connection = new signalR.HubConnectionBuilder().withUrl("/ws").build();
-
-        connection.on("ReceiveMessage", function (message) {
-            var notificationContainer = document.getElementById("notification-container");
-            var notificationElement = document.createElement("div");
-            notificationElement.textContent = message;
-            notificationContainer.appendChild(notificationElement);
-        });
-
-        connection.start().catch(function (err) {
-            return console.error(err.toString());
-        });
 
         function uploadFile() {
             var fileInput = document.getElementById('uploadFileBtn');
@@ -108,7 +91,7 @@
                 var formData = new FormData();
                 formData.append('file', file);
 
-                fetch('http://task7api2-dev.eba-m43bikep.eu-north-1.elasticbeanstalk.com/api/Employee/post', {
+                fetch('https://localhost:7005/api/Employees/post', {
                     method: 'POST',
                     body: formData,
                 })
@@ -119,7 +102,7 @@
                             successMsg.innerHTML = data.message;
                             setTimeout(() => {
                                 successMsg.style.display = 'none';
-                            }, 4000)
+                            }, 8000)
 
                         }
                         else {
@@ -139,6 +122,28 @@
                 errorMsg.innerHTML = 'No file selected';
             }
         }
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("http://localhost:7178/api"
+            )
+            .build();
+
+        connection.start().then(() => {
+            console.log("Connected to SignalR Hub");
+        }).catch(err => console.error(err));
+
+        connection.on("FileProcessed", message => {
+            console.log("File processed notification:", message);
+            var fileProcessedMessage = document.getElementById("notification-success-container");
+            var messageInfoArray = message.split(":");
+            fileProcessedMessage.innerHTML = messageInfoArray[0];
+            setTimeout(() => {
+                fileProcessedMessage.style.display = 'none';
+            }, 4000)
+            var blobInfo = messageInfoArray[1] + ":" + messageInfoArray[2];
+            pollBackendAPI(blobInfo);
+
+        });
 
     </script>
 </body>

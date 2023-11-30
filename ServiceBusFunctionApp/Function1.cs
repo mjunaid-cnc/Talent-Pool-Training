@@ -49,15 +49,16 @@ namespace ServiceBusFunctionApp
                         .Build();
 
                     string processedContainerName = config["ProcessedContainerName"] ?? throw new Exception("Processed container name is null");
+                    string processedFileName = Guid.NewGuid() + ProcessedFilename.Test.ToString() + "." + FileExtensions.json.ToString();
                     var destinationBlobContainerClient = new BlobContainerClient(connectionString, processedContainerName);
-                    var processedBlobClient = destinationBlobContainerClient.GetBlobClient(Guid.NewGuid() + ProcessedFilename.Test.ToString() + "." + FileExtensions.json.ToString());
+                    var processedBlobClient = destinationBlobContainerClient.GetBlobClient(processedFileName);
                     using var stream = new MemoryStream(Encoding.UTF8.GetBytes(jsonContent));
                     await processedBlobClient.UploadAsync(stream, true);
 
                     var message = new SignalRMessage
                     {
                         Target = "FileProcessed",
-                        Arguments = new[] { "File processed successfully" }
+                        Arguments = new[] { $"File processed successfully:{processedContainerName}:{processedFileName}" }
                     };
                     await signalRMessages.AddAsync(message);
                 }
