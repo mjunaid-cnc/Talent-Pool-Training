@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "Task8FunctionApp": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7114",
+      "environmentVariables": {
+        "SecretName": "ConnectionString",
+        "KVUri": "https://dbConnectionTask8.vault.azure.net",
+        "StorageAccConnectionString": "DefaultEndpointsProtocol=https;AccountName=task8storage;AccountKey=8Ny+rCFzqrfoYOsX/uDGermUwes4AfCTKww5zNVRY4lp00pBgtC4nMh8hD9C3ULcTo5hZCzv/f7K+ASt/IJTmA==;EndpointSuffix=core.windows.net",
+        "ContainerName": "task8-processed-container"
+      }
+    }
+  }
+}
