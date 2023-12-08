@@ -6,16 +6,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ServiceBusFunctionApp.Helpers
 {
     public class BlobHelper
     {
-        public static async Task<string?> GetBlobConnectionStringAsync()
+        public static async Task<string?> GetBlobConnectionStringAsync(Microsoft.Azure.WebJobs.ExecutionContext context)
         {
             var config = new ConfigurationBuilder()
-             .SetBasePath(Directory.GetCurrentDirectory())
+             .SetBasePath(context.FunctionAppDirectory)
              .AddJsonFile("appsettings.json", true, true)
              .Build();
 

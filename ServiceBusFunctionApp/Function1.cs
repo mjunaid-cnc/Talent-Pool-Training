@@ -21,9 +21,11 @@ namespace ServiceBusFunctionApp
         [FunctionName("Function1")]
         public async Task RunAsync([ServiceBusTrigger("task9-queue", Connection = "AzureWebJobsStorage")] string myQueueItem,
             [SignalR(HubName = "Task9Hub")] IAsyncCollector<SignalRMessage> signalRMessages,
-            ILogger log)
+            ILogger log,
+            ExecutionContext context)
         {
             log.LogInformation($"C# ServiceBus queue trigger function processed message: {myQueueItem}");
+            log.LogInformation($"Directory: {Directory.GetCurrentDirectory()}");
             var queueItemArray = myQueueItem.Split(':');
 
             if (queueItemArray.Length == 2)
@@ -31,7 +33,7 @@ namespace ServiceBusFunctionApp
                 var containerName = queueItemArray[0];
                 var filename = queueItemArray[1];
 
-                string connectionString = await BlobHelper.GetBlobConnectionStringAsync();
+                string connectionString = await BlobHelper.GetBlobConnectionStringAsync(context);
 
                 BlobContainerClient containerClient = new BlobContainerClient(connectionString, containerName);
                 var blobClient = containerClient.GetBlobClient(filename);
@@ -44,10 +46,9 @@ namespace ServiceBusFunctionApp
                     log.LogInformation(jsonContent);
 
                     var config = new ConfigurationBuilder()
-                        .SetBasePath(Directory.GetCurrentDirectory())
+                        .SetBasePath(context.FunctionAppDirectory)
                         .AddJsonFile("appsettings.json", true, true)
                         .Build();
-
                     string processedContainerName = config["ProcessedContainerName"] ?? throw new Exception("Processed container name is null");
                     string processedFileName = Guid.NewGuid() + ProcessedFilename.Test.ToString() + "." + FileExtensions.json.ToString();
                     var destinationBlobContainerClient = new BlobContainerClient(connectionString, processedContainerName);

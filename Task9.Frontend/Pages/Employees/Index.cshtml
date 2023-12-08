@@ -50,7 +50,7 @@
     <script>
 
         function pollBackendAPI(blobInfo) {
-            var apiEndpoint = `https://localhost:7005/api/Employees/get-all?blobInfo=${blobInfo}`;
+            var apiEndpoint = `https://talent-pool-task9-api.azurewebsites.net/api/Employees/get-all?blobInfo=${blobInfo}`;
 
             fetch(apiEndpoint)
                 .then(response => {
@@ -91,7 +91,7 @@
                 var formData = new FormData();
                 formData.append('file', file);
 
-                fetch('https://localhost:7005/api/Employees/post', {
+                fetch('https://talent-pool-task9-api.azurewebsites.net/api/Employees/post', {
                     method: 'POST',
                     body: formData,
                 })
@@ -124,9 +124,11 @@
         }
 
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl("http://localhost:7178/api"
-            )
+            .withUrl("https://talent-pool-task9.azurewebsites.net/api", {
+                withCredentials: false, // Set withCredentials to true
+            })
             .build();
+
 
         connection.start().then(() => {
             console.log("Connected to SignalR Hub");

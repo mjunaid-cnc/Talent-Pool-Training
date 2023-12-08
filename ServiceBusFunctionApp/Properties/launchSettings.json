@@ -3,7 +3,11 @@
     "ServiceBusFunctionApp": {
       "commandName": "Project",
       "commandLineArgs": "--port 7178",
-      "launchBrowser": false
+      "environmentVariables": {
+        "SecretName": "task9-processed-container",
+        "KVUri": "https://task9-vault.vault.azure.net",
+        "ProcessedContainerName": "task9-processed-container"
+      }
     }
   }
 }

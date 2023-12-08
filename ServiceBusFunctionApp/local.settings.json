@@ -1,0 +1,17 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "Endpoint=sb://talent-pool-task9.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=Mb5fyE8/X6WRoxhl69+UJSDYdGFbwVm5a+ASbExsgb4=",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "AzureSignalRConnectionString": "Endpoint=https://task99.service.signalr.net;AccessKey=bp2qsY+gDvVwPktQh8f406d5/u+PqaA5uAwWaqzaVcQ=;Version=1.0;",
+    "CORS": "https://talent-pool-task9-frontend.azurewebsites.net, https://localhost:7274",
+    "CORSCredentials": "True",
+    "SecretName": "task9-processed-container",
+    "KVUri": "https://task9-vault.vault.azure.net",
+    "ProcessedContainerName": "task9-processed-container"
+  },
+  "Host": {
+    "CORS": "https://localhost:7274, https://talent-pool-task9-frontend.azurewebsites.net",
+    "CORSCredentials": true
+  }
+}
