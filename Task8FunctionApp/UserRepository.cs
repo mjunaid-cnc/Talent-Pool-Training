@@ -1,10 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Task8FunctionApp.Entities;
 using Task8FunctionApp.Helpers;
 using Task8FunctionApp.Models;
 

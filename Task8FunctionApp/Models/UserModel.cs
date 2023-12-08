@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Task8FunctionApp.Models
+﻿namespace Task8FunctionApp.Models
 {
-    public class UserModel
+    public record UserModel
     {
         public string Username { get; set; }
         public string Email { get; set; }

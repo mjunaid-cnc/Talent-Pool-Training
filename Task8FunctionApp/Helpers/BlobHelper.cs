@@ -1,9 +1,6 @@
 ﻿using Azure.Storage.Blobs;
-using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,13 +10,8 @@ namespace Task8FunctionApp.Helpers
     {
         public static async Task UploadToBlobAsync(string blobName, string jsonContent)
         {
-            var config = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", true, true)
-            .Build();
-
-            string containerName = config["ContainerName"];
-            string connectionString = config["StorageAccConnectionString"];
+            string containerName = Environment.GetEnvironmentVariable("ContainerName");
+            string connectionString = Environment.GetEnvironmentVariable("StorageAccConnectionString");
             blobName = "processed_" + blobName;
             var blobServiceClient = new BlobServiceClient(connectionString);
             var containerClient = blobServiceClient.GetBlobContainerClient(containerName);
