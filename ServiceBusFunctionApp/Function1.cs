@@ -25,7 +25,6 @@ namespace ServiceBusFunctionApp
             ExecutionContext context)
         {
             log.LogInformation($"C# ServiceBus queue trigger function processed message: {myQueueItem}");
-            log.LogInformation($"Directory: {Directory.GetCurrentDirectory()}");
             var queueItemArray = myQueueItem.Split(':');
 
             if (queueItemArray.Length == 2)
