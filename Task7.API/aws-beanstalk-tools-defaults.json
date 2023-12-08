@@ -1,0 +1,20 @@
+
+{
+    "region" : "eu-north-1",
+    "configuration" : "Debug",
+    "framework"     : "net6.0",
+    "self-contained" : false,
+    "application"    : "Task7API",
+    "environment"    : "Task7API-dev",
+    "enable-xray"    : false,
+    "enhanced-health-type" : "basic",
+    "additional-options"   : "\"aws:autoscaling:launchconfiguration,SecurityGroups\"=\"sg-09721bca3437bdf07,sg-00f90349af1a56c31\";\"aws:ec2:vpc,Subnets\"=\"subnet-0dc722444e19271e0\"",
+    "solution-stack"       : "64bit Amazon Linux 2 v2.6.2 running .NET Core",
+    "environment-type"     : "SingleInstance",
+    "cname"                : "task7api-dev",
+    "instance-type"        : "c5.18xlarge",
+    "key-pair"             : "",
+    "instance-profile"     : "aws-elasticbeanstalk-ec2-role",
+    "service-role"         : "aws-elasticbeanstalk-service-role",
+    "proxy-server"         : "nginx"
+}
